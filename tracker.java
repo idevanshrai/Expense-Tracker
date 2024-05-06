@@ -11,19 +11,20 @@ class Expense {
     }
 }
 
-public class ExpenseTracker {
+public class ExpenseTracker {    //using arraylist to avoid stack data structure 
     private static ArrayList<Expense> expenses = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         while (true) {
-            System.out.print("Enter 'a' to add an expense, 'v' to view total, or 'q' to quit: ");
+            System.out.print("Enter 'a' to add an expense, 'v' to view total and expense details, or 'q' to quit: ");
             String action = scanner.nextLine();
 
             if (action.equals("a")) {
                 addExpense();
             } else if (action.equals("v")) {
                 viewTotal();
+                viewExpenseDetails();
             } else if (action.equals("q")) {
                 break;
             } else {
@@ -32,7 +33,7 @@ public class ExpenseTracker {
         }
     }
 
-    private static void addExpense() {
+    private static void addExpense() {     //adding expenses
         System.out.print("Enter the amount: ");
         double amount = scanner.nextDouble();
         scanner.nextLine(); 
@@ -42,11 +43,20 @@ public class ExpenseTracker {
         System.out.println("Expense added successfully!");
     }
 
-    private static void viewTotal() {
+    private static void viewTotal() {   //printing total expense
+        double total = expenses.stream()
+                               .mapToDouble(expense -> expense.amount)
+                               .sum();
+        System.out.printf("Total expenses: $%.2f\n", total);
+    }
+
+    private static void viewExpenseDetails() {  //printing individual expense 
+        System.out.println("\nExpense Details:");
         double total = 0;
         for (Expense expense : expenses) {
+            System.out.printf("$%.2f - %s\n", expense.amount, expense.description);
             total += expense.amount;
         }
-        System.out.printf("Total expenses: $%.2f\n", total);
+        System.out.printf("\nTotal amount spent: $%.2f\n", total);
     }
 }
